@@ -1,0 +1,14 @@
+{
+  "name": "Nestjs Template",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "nestjs",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [3000],
+  "remoteUser": "node",
+  "customizations": {
+    "vscode": {
+      "extensions": [],
+      "settings": {}
+    }
+  }
+}

@@ -1,0 +1,53 @@
+services:
+  nestjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nestjs-dev
+    user: node
+    working_dir: /workspace
+    command: sleep infinity  # Keep container running
+    volumes:
+      - ..:/workspace:cached  
+    ports:
+      - "3000:3000"  # NestJS API
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://nestjs:nestjs@postgres:5432/nestjs
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  postgres:
+    image: postgres:latest  # Use latest PostgreSQL
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: nestjs
+      POSTGRES_PASSWORD: nestjs
+      POSTGRES_DB: nestjs
+    ports:
+      - "5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest  # Use latest Redis
+    container_name: redis-cache
+    restart: always
+    ports:
+      - "6379"
+  pgadmin:
+    image: dpage/pgadmin4:latest  # pgAdmin for PostgreSQL
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com  # Change if needed
+      PGADMIN_DEFAULT_PASSWORD: admin  # Change if needed
+    ports:
+      - "5050:80"  # pgAdmin UI
+
+volumes:
+  pgdata:
